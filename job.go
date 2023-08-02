@@ -166,6 +166,13 @@ func (j *Job) updateConnections() {
 					continue
 				}
 			}
+			if newConn.driver == "netezza" {
+				newConn.conn, err = sqlx.Open("nzgo", u.String())
+				if err != nil {
+					level.Error(j.log).Log("msg", "Failed to open Netezza connection", "connection", conn, "err", err)
+					continue
+				}
+			}
 			j.conns = append(j.conns, newConn)
 		}
 	}
