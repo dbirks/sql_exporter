@@ -9,7 +9,7 @@ import (
 	"time"
 
 	_ "github.com/ClickHouse/clickhouse-go/v2" // register the ClickHouse driver
-	_ "github.com/IBM/nzgo" // register the Netezza driver
+	_ "github.com/IBM/nzgo"                    // register the Netezza driver
 	"github.com/cenkalti/backoff"
 	_ "github.com/denisenkom/go-mssqldb" // register the MS-SQL driver
 	"github.com/go-kit/log"
@@ -166,22 +166,6 @@ func (j *Job) updateConnections() {
 					continue
 				}
 			}
-			if newConn.driver == "netezza" {
-				password, _ := u.User.Password()
-
-				dsn := "host=" + u.Hostname() +
-					" port=" + u.Port() +
-					" dbname=" + u.Path +
-					" user=" + u.User.Username() +
-					" password=" + password
-
-				newConn.conn, err = sqlx.Open("nzgo", dsn)
-				if err != nil {
-					level.Error(j.log).Log("msg", "Failed to open Netezza connection", "connection", conn, "err", err)
-					continue
-				}
-
-			}
 			j.conns = append(j.conns, newConn)
 		}
 	}
@@ -281,6 +265,8 @@ func (c *connection) connect(job *Job) error {
 		c.driver = "clickhouse"
 	case "clickhouse": // Backward compatible alias
 		dsn = "tcp://" + strings.TrimPrefix(dsn, "clickhouse://")
+	case "netezza":
+		c.driver = "nzgo"
 	}
 	conn, err := sqlx.Connect(c.driver, dsn)
 	if err != nil {
