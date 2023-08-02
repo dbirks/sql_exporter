@@ -26,6 +26,8 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.1.2 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v1.0.0 // indirect
 	github.com/ClickHouse/ch-go v0.52.1 // indirect
+	github.com/IBM/nzgo v11.1.0+incompatible // indirect
+	github.com/IBM/nzgo/v12 v12.0.8 // indirect
 	github.com/JohnCGriffin/overflow v0.0.0-20211019200055-46fa312c352c // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/apache/arrow/go/v12 v12.0.0 // indirect

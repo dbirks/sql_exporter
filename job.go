@@ -20,6 +20,7 @@ import (
 	_ "github.com/segmentio/go-athena" // register the AWS Athena driver
 	"github.com/snowflakedb/gosnowflake"
 	_ "github.com/vertica/vertica-sql-go" // register the Vertica driver
+	_ "github.com/IBM/nzgo" // register the Netezza driver
 )
 
 var (
@@ -264,6 +265,8 @@ func (c *connection) connect(job *Job) error {
 		c.driver = "clickhouse"
 	case "clickhouse": // Backward compatible alias
 		dsn = "tcp://" + strings.TrimPrefix(dsn, "clickhouse://")
+	case "netezza":
+		c.driver = "nzgo"
 	}
 	conn, err := sqlx.Connect(c.driver, dsn)
 	if err != nil {
