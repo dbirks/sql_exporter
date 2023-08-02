@@ -9,7 +9,8 @@ import (
 	"time"
 
 	_ "github.com/ClickHouse/clickhouse-go/v2" // register the ClickHouse driver
-	_ "github.com/IBM/nzgo"                    // register the Netezza driver
+	"github.com/IBM/nzgo"
+	_ "github.com/IBM/nzgo" // register the Netezza driver
 	"github.com/cenkalti/backoff"
 	_ "github.com/denisenkom/go-mssqldb" // register the MS-SQL driver
 	"github.com/go-kit/log"
@@ -273,6 +274,11 @@ func (c *connection) connect(job *Job) error {
 	case "clickhouse": // Backward compatible alias
 		dsn = "tcp://" + strings.TrimPrefix(dsn, "clickhouse://")
 	case "netezza":
+		var err error
+		dsn, err = nzgo.ParseURL(c.url)
+		if err != nil {
+			return fmt.Errorf("unable to parse Netezza URL: %s", err)
+		}
 		c.driver = "nzgo"
 	}
 	conn, err := sqlx.Connect(c.driver, dsn)
